@@ -32,14 +32,20 @@ export default function Hero() {
       }} />
 
       {/* Three.js BendText — "TURF ARENA" bends with mouse */}
-      <BendText text="TURF ARENA" />
+      <div style={{ position: 'absolute', inset: 0, top: '-18%', zIndex: 0, pointerEvents: 'none' }}>
+        <BendText text="TURF ARENA" />
+      </div>
 
       {/* Hero content sits above the 3D layer */}
       <div style={{ position: 'relative', zIndex: 2 }}>
         <div className="hero-badge">Chennai's Premier Sports Facility</div>
 
-        {/* Spacer — gives vertical room for the 3D text above the tagline */}
-        <div style={{ height: 'clamp(120px, 22vh, 180px)' }} />
+        {/* Invisible spacer so BendText text is visible behind the h1 */}
+        <div style={{ height: 8 }} />
+
+        <h1 style={{ opacity: 0, pointerEvents: 'none', userSelect: 'none', margin: 0, lineHeight: 1 }}>
+          <span>TURF</span> ARENA
+        </h1>
 
         <p className="hero-tag">Where Champions Play</p>
 
