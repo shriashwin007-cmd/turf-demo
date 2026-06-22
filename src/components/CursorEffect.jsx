@@ -121,6 +121,8 @@ export default function CursorEffect({
     window.addEventListener('resize', resize);
 
     const onMove = (e) => {
+      // suppress effect during scroll-video intro (first 1000vh)
+      if (window.scrollY < window.innerHeight * 10) return;
       stampAlong(e.clientX, e.clientY);
       startLoop();
     };
