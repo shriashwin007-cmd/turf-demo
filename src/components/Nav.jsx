@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import GlowButton from './GlowButton';
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Nav() {
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
-        <a href="#booking" className="nav-cta">Book a Slot</a>
+        <GlowButton href="#booking" style={{ transform: 'scale(0.78)', transformOrigin: 'center', margin: '0 -8px' }}>Book a Slot</GlowButton>
         <button className="hamburger" onClick={() => setOpen(o => !o)}>
           <span /><span /><span />
         </button>

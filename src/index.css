@@ -249,6 +249,14 @@ footer { background: var(--dark); border-top: 1px solid var(--border); padding: 
 .ai-dot:nth-child(3) { animation-delay: .3s; }
 @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
 
+/* GlowButton spin animation */
+@keyframes glow-spin {
+  0%   { transform: rotate(10deg) scale(1); }
+  50%  { transform: rotate(190deg) scale(0.78); }
+  100% { transform: rotate(370deg) scale(1); }
+}
+.glow-spin { animation: glow-spin 8s cubic-bezier(0.56, 0.15, 0.28, 0.86) infinite; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   nav { padding: 0 20px; }

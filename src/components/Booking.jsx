@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import GlowButton from './GlowButton';
 
 const timeSlots = [
   { value: '6am', label: '6:00 AM' }, { value: '7am', label: '7:00 AM' },
@@ -96,9 +97,9 @@ export default function Booking() {
               <textarea rows={2} value={form.notes} onChange={e => set('notes', e.target.value)} placeholder="Any special requirements..." />
             </div>
 
-            <button className="btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={submit}>
-              Confirm Booking →
-            </button>
+            <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
+              <GlowButton onClick={submit} style={{ width: '100%' }}>Confirm Booking →</GlowButton>
+            </div>
             {success && <div className="success-msg">🎉 Booking Confirmed! We'll WhatsApp you the details shortly.</div>}
           </div>
 

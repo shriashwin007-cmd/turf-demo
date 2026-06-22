@@ -1,3 +1,5 @@
+import GlowButton from './GlowButton';
+
 export default function Event() {
   return (
     <section id="event">
@@ -14,7 +16,7 @@ export default function Event() {
               <div className="event-meta-item">📍 TURF Arena, Chennai</div>
             </div>
             <div style={{ marginTop: 20 }}>
-              <a href="#booking" className="btn-primary">Register Now →</a>
+              <GlowButton href="#booking">Register Now →</GlowButton>
             </div>
           </div>
           <div>

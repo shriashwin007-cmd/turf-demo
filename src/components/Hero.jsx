@@ -1,3 +1,5 @@
+import GlowButton from './GlowButton';
+
 const HERO_BG = 'https://res.cloudinary.com/dysoq8l4d/image/upload/v1782148001/Artificial_turf_at_a_stadium_q6fujf.jpg';
 
 const stats = [
@@ -19,7 +21,6 @@ export default function Hero() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      {/* dark overlay */}
       <div style={{
         position: 'absolute', inset: 0,
         background: 'linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,20,0,0.80) 60%, rgba(0,0,0,0.90) 100%)',
@@ -29,10 +30,12 @@ export default function Hero() {
         <div className="hero-badge">Chennai's Premier Sports Facility</div>
         <h1><span>TURF</span> ARENA</h1>
         <p className="hero-tag">Where Champions Play</p>
+
         <div className="hero-btns">
-          <a href="#booking" className="btn-primary">⚡ Book a Slot</a>
+          <GlowButton href="#booking">⚡ Book a Slot</GlowButton>
           <a href="#about" className="btn-outline">Explore Facility</a>
         </div>
+
         <div className="hero-stats">
           {stats.map(s => (
             <div className="hero-stat" key={s.label}>
