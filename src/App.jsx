@@ -11,10 +11,12 @@ import Gallery from './components/Gallery';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
+import CursorEffect from './components/CursorEffect';
 
 export default function App() {
   return (
     <>
+      <CursorEffect />
       <Nav />
       <Hero />
       <About />
