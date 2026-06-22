@@ -5,7 +5,14 @@ export default function Nav() {
   return (
     <>
       <nav>
-        <a href="#home" className="nav-logo">⚽ TURF ARENA</a>
+        <a href="#home" className="nav-logo">
+          <img
+            src="https://res.cloudinary.com/dnz8ijvmk/image/upload/f_auto,q_auto/ChatGPT_Image_Jun_22_2026_at_10_32_20_PM_io8mlz"
+            alt="TURF Arena Logo"
+            style={{ height: 36, width: 36, borderRadius: 6, objectFit: 'cover', marginRight: 8, verticalAlign: 'middle' }}
+          />
+          TURF ARENA
+        </a>
         <ul className="nav-links">
           <li><a href="#about">About</a></li>
           <li><a href="#booking">Book Now</a></li>

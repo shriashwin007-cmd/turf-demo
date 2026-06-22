@@ -1,24 +1,27 @@
 import { useState } from 'react';
 
-const ALL_ITEMS = [
-  { emoji: '⚽', label: 'Goal Celebration', cat: 'football' },
+const REAL_IMGS = [
+  { src: 'https://res.cloudinary.com/dysoq8l4d/image/upload/v1782148001/Artificial_turf_at_a_stadium_q6fujf.jpg', label: 'Stadium View', cat: 'football' },
+  { src: 'https://res.cloudinary.com/dysoq8l4d/image/upload/v1782148173/artificial-turf-of-soccer-football-field-photo_cwnrpp.jpg', label: 'Football Field', cat: 'football' },
+  { src: 'https://res.cloudinary.com/dysoq8l4d/image/upload/v1782148240/photo-1704633785114-52104ce3d626_o0p3rj.avif', label: 'Night Match', cat: 'night' },
+  { src: 'https://res.cloudinary.com/dysoq8l4d/image/upload/v1782148311/images-2_qr1ygq.jpg', label: 'Ground Overview', cat: 'football' },
+];
+
+const EMOJI_ITEMS = [
   { emoji: '🏏', label: 'Cricket Finals', cat: 'cricket' },
   { emoji: '🌙', label: 'Night Football', cat: 'night' },
   { emoji: '🏆', label: 'Champions Cup', cat: 'celebration' },
   { emoji: '🤸', label: 'Training Drill', cat: 'training' },
-  { emoji: '⚽', label: '5-a-side Match', cat: 'football' },
   { emoji: '🌃', label: 'Floodlit Arena', cat: 'night' },
   { emoji: '🎉', label: 'Team Victory', cat: 'celebration' },
   { emoji: '🏏', label: 'Batting Practice', cat: 'cricket' },
   { emoji: '💪', label: 'Warm Up Session', cat: 'training' },
-  { emoji: '⚽', label: 'Penalty Shootout', cat: 'football' },
   { emoji: '🌙', label: 'Night Tournament', cat: 'night' },
   { emoji: '🥇', label: 'Trophy Lift', cat: 'celebration' },
   { emoji: '🏃', label: 'Sprint Training', cat: 'training' },
   { emoji: '🏏', label: 'Net Session', cat: 'cricket' },
   { emoji: '🔥', label: 'Final Whistle', cat: 'football' },
   { emoji: '📸', label: 'Team Photo', cat: 'celebration' },
-  { emoji: '🤝', label: 'Pre-match Huddle', cat: 'training' },
 ];
 
 const CATS = [
@@ -32,7 +35,9 @@ const CATS = [
 
 export default function Gallery() {
   const [active, setActive] = useState('all');
-  const items = active === 'all' ? ALL_ITEMS : ALL_ITEMS.filter(i => i.cat === active);
+
+  const realFiltered = active === 'all' ? REAL_IMGS : REAL_IMGS.filter(i => i.cat === active);
+  const emojiFiltered = active === 'all' ? EMOJI_ITEMS : EMOJI_ITEMS.filter(i => i.cat === active);
 
   return (
     <section id="gallery">
@@ -51,8 +56,21 @@ export default function Gallery() {
           ))}
         </div>
         <div className="gallery-grid">
-          {items.map((item, i) => (
-            <div className="gallery-item" key={i}>
+          {/* Real photos first */}
+          {realFiltered.map((item, i) => (
+            <div className="gallery-item" key={`real-${i}`}>
+              <img
+                src={item.src}
+                alt={item.label}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+              <div className="gallery-overlay"><span style={{ fontSize: 24 }}>🔍</span></div>
+              <div className="gallery-label">{item.label}</div>
+            </div>
+          ))}
+          {/* Emoji placeholders after */}
+          {emojiFiltered.map((item, i) => (
+            <div className="gallery-item" key={`emoji-${i}`}>
               <div className="gallery-emoji">{item.emoji}</div>
               <div className="gallery-overlay"><span style={{ fontSize: 24 }}>🔍</span></div>
               <div className="gallery-label">{item.label}</div>
