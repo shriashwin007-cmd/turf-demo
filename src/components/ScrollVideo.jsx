@@ -111,7 +111,7 @@ export default function ScrollVideo() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', height: '700vh', background: '#000' }}
+      style={{ position: 'relative', height: '1000vh', background: '#000' }}
     >
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
 
