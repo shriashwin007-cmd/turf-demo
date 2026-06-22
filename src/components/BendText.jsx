@@ -15,7 +15,7 @@ export default function BendText({ text = 'TURF ARENA' }) {
     const camera = new THREE.OrthographicCamera(
       -10 * aspect, 10 * aspect, 10, -10, 0.1, 1000
     );
-    camera.position.set(0, 0, 10);
+    camera.position.set(0.6, 0.8, 10);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -81,7 +81,7 @@ export default function BendText({ text = 'TURF ARENA' }) {
           float minD = 2.8;
           if(dist < minD){
             float t = easeInOutCubic(map(dist, 0.0, minD, 1.0, 0.0));
-            pos.z += t * 2.2;
+            pos.z += t * 0.55;
           }
           gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
         }
@@ -136,6 +136,8 @@ export default function BendText({ text = 'TURF ARENA' }) {
     const geo      = new THREE.PlaneGeometry(15, 15, 150, 150);
     const textMesh = new THREE.Mesh(geo, mainMat);
     const shdwMesh = new THREE.Mesh(geo, shadowMat);
+    textMesh.position.y = 1.8;
+    shdwMesh.position.y = 1.8;
     shdwMesh.position.z = -0.06;
     scene.add(textMesh);
     scene.add(shdwMesh);

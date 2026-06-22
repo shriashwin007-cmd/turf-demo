@@ -32,9 +32,7 @@ export default function Hero() {
       }} />
 
       {/* Three.js BendText — "TURF ARENA" bends with mouse */}
-      <div style={{ position: 'absolute', inset: 0, top: '-18%', zIndex: 0, pointerEvents: 'none' }}>
-        <BendText text="TURF ARENA" />
-      </div>
+      <BendText text="TURF ARENA" />
 
       {/* Hero content sits above the 3D layer */}
       <div style={{ position: 'relative', zIndex: 2 }}>
