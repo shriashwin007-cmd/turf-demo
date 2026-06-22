@@ -3,49 +3,47 @@ import * as THREE from 'three';
 
 export default function BendText({ text = 'TURF ARENA' }) {
   const containerRef = useRef(null);
-  const sceneRef     = useRef({});
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // ── Scene ──────────────────────────────────────
-    const scene = new THREE.Scene();
-    const aspect = container.clientWidth / container.clientHeight;
-    const camera = new THREE.OrthographicCamera(
-      -10 * aspect, 10 * aspect, 10, -10, 0.1, 1000
-    );
-    camera.position.set(5, 5, 5);
+    const W = container.clientWidth;
+    const H = container.clientHeight;
+
+    // ── Perspective camera — looking straight on ──
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
+    camera.position.set(0, 0, 18);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
-    renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+    renderer.domElement.style.cssText =
+      'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
     container.appendChild(renderer.domElement);
 
     // ── Text textures ──────────────────────────────
     function makeTexture(shadow = false) {
       const cvs = document.createElement('canvas');
-      cvs.width = 1024; cvs.height = 1024;
-      const ctx = cvs.getContext('2d');
+      cvs.width  = 1024;
+      cvs.height = 512;
+      const ctx  = cvs.getContext('2d');
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.clearRect(0, 0, 1024, 1024);
-
-      ctx.font = 'bold 148px "Oswald", system-ui, sans-serif';
-      ctx.textAlign = 'center';
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      ctx.font        = 'bold 148px "Oswald", system-ui, sans-serif';
+      ctx.textAlign   = 'center';
       ctx.textBaseline = 'middle';
-
       if (shadow) {
-        ctx.filter = 'blur(18px)';
-        ctx.fillStyle = 'rgba(0,200,83,0.55)';
+        ctx.filter    = 'blur(18px)';
+        ctx.fillStyle = 'rgba(0,200,83,0.6)';
       } else {
         ctx.fillStyle = '#ffffff';
       }
-      ctx.fillText(text, 512, 512);
-
+      ctx.fillText(text, cvs.width / 2, cvs.height / 2);
       const tex = new THREE.CanvasTexture(cvs);
       tex.generateMipmaps = false;
       tex.minFilter = THREE.LinearFilter;
@@ -56,7 +54,7 @@ export default function BendText({ text = 'TURF ARENA' }) {
     const textTex   = makeTexture(false);
     const shadowTex = makeTexture(true);
 
-    // ── Main shader (displacement) ─────────────────
+    // ── Main shader ────────────────────────────────
     const mainMat = new THREE.ShaderMaterial({
       uniforms: {
         uTexture:      { value: textTex },
@@ -70,20 +68,20 @@ export default function BendText({ text = 'TURF ARENA' }) {
           return x < 0.5 ? 4.0*x*x*x : 1.0 - pow(-2.0*x+2.0,3.0)/2.0;
         }
         float map(float v,float a,float b,float c,float d){
-          return c+(v-a)*(d-c)/(b-a);
+          return c + (v-a)*(d-c)/(b-a);
         }
 
         void main(){
           vUv = uv;
           vec3 pos = position;
-          vec4 world = modelMatrix * vec4(position,1.0);
+          vec4 world = modelMatrix * vec4(position, 1.0);
           float dist = length(uDisplacement - world.xyz);
-          float minD = 2.8;
+          float minD = 3.2;
           if(dist < minD){
             float t = easeInOutCubic(map(dist, 0.0, minD, 1.0, 0.0));
-            pos.z += t * 1.6;
+            pos.z += t * 1.8;
           }
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
         }
       `,
       fragmentShader: `
@@ -106,9 +104,9 @@ export default function BendText({ text = 'TURF ARENA' }) {
         uniform vec3 uDisplacement;
         void main(){
           vUv = uv;
-          vec4 world = modelMatrix * vec4(position,1.0);
+          vec4 world = modelMatrix * vec4(position, 1.0);
           vDist = length(uDisplacement - world.xyz);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
       fragmentShader: `
@@ -119,35 +117,36 @@ export default function BendText({ text = 'TURF ARENA' }) {
         float easeOutQuad(float x){ return 1.0-(1.0-x)*(1.0-x); }
         void main(){
           vec4 color = texture2D(uTexture, vUv);
-          float minD = 2.8;
-          if(vDist < minD){
-            float n = map(vDist,0.0,minD,1.0,0.0);
-            color.a = easeOutQuad(n)*color.a*0.85;
-          } else {
-            color.a = 0.0;
-          }
+          float minD = 3.2;
+          color.a = vDist < minD
+            ? easeOutQuad(map(vDist,0.0,minD,1.0,0.0))*color.a*0.9
+            : 0.0;
           gl_FragColor = color;
         }
       `,
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
     });
 
-    // ── Meshes ─────────────────────────────────────
-    const geo      = new THREE.PlaneGeometry(15, 15, 150, 150);
+    // ── Meshes — slightly wide plane to match 2:1 text canvas ──
+    const geo      = new THREE.PlaneGeometry(16, 8, 160, 80);
     const textMesh = new THREE.Mesh(geo, mainMat);
     const shdwMesh = new THREE.Mesh(geo, shadowMat);
-    shdwMesh.position.z = -0.06;
-    scene.add(textMesh);
-    scene.add(shdwMesh);
 
-    // invisible hit plane for raycasting
-    const hitGeo  = new THREE.PlaneGeometry(20, 20);
-    const hitMat  = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
+    // Nudge up so text sits in upper half of hero
+    textMesh.position.y = 1.5;
+    shdwMesh.position.set(0, 1.5, -0.06);
+
+    scene.add(shdwMesh);
+    scene.add(textMesh);
+
+    // invisible hit plane for raycasting (same position as mesh)
+    const hitGeo   = new THREE.PlaneGeometry(20, 14);
+    const hitMat   = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
     const hitPlane = new THREE.Mesh(hitGeo, hitMat);
-    hitPlane.name = 'hit';
+    hitPlane.position.y = 1.5;
     scene.add(hitPlane);
 
-    // ── Raycasting + mouse ─────────────────────────
+    // ── Raycasting ─────────────────────────────────
     const raycaster = new THREE.Raycaster();
     const pointer   = new THREE.Vector2();
 
@@ -174,15 +173,13 @@ export default function BendText({ text = 'TURF ARENA' }) {
     const onResize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
-      const a = w / h;
-      camera.left   = -10 * a;
-      camera.right  =  10 * a;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
     window.addEventListener('resize', onResize);
 
-    // ── Animation loop ─────────────────────────────
+    // ── Animate ────────────────────────────────────
     let animId;
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -190,7 +187,6 @@ export default function BendText({ text = 'TURF ARENA' }) {
     };
     animate();
 
-    // ── Cleanup ────────────────────────────────────
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', onMouseMove);
@@ -200,16 +196,10 @@ export default function BendText({ text = 'TURF ARENA' }) {
       textTex.dispose(); shadowTex.dispose();
       geo.dispose(); hitGeo.dispose();
       mainMat.dispose(); shadowMat.dispose(); hitMat.dispose();
-      if (container.contains(renderer.domElement)) {
+      if (container.contains(renderer.domElement))
         container.removeChild(renderer.domElement);
-      }
     };
   }, [text]);
 
-  return (
-    <div
-      ref={containerRef}
-      style={{ position: 'absolute', inset: 0, zIndex: 0 }}
-    />
-  );
+  return <div ref={containerRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} />;
 }

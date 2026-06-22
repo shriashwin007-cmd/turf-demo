@@ -38,12 +38,8 @@ export default function Hero() {
       <div style={{ position: 'relative', zIndex: 2 }}>
         <div className="hero-badge">Chennai's Premier Sports Facility</div>
 
-        {/* Invisible spacer so BendText text is visible behind the h1 */}
-        <div style={{ height: 8 }} />
-
-        <h1 style={{ opacity: 0, pointerEvents: 'none', userSelect: 'none', margin: 0, lineHeight: 1 }}>
-          <span>TURF</span> ARENA
-        </h1>
+        {/* Spacer — gives vertical room for the 3D text above the tagline */}
+        <div style={{ height: 'clamp(120px, 22vh, 180px)' }} />
 
         <p className="hero-tag">Where Champions Play</p>
 
