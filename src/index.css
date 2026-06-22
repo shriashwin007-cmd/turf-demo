@@ -253,6 +253,11 @@ footer { background: var(--dark); border-top: 1px solid var(--border); padding: 
 @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
 
 /* GlowButton spin animation */
+@keyframes sv-pulse {
+  0%,100% { opacity: 0.3; transform: scaleY(1); }
+  50%      { opacity: 1;   transform: scaleY(1.15); }
+}
+
 @keyframes glow-spin {
   0%   { transform: rotate(10deg) scale(1); }
   50%  { transform: rotate(190deg) scale(0.78); }

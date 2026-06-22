@@ -12,12 +12,14 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AIAssistant from './components/AIAssistant';
 import CursorEffect from './components/CursorEffect';
+import ScrollVideo from './components/ScrollVideo';
 
 export default function App() {
   return (
     <>
       <CursorEffect />
       <Nav />
+      <ScrollVideo />
       <Hero />
       <About />
       <Pricing />
